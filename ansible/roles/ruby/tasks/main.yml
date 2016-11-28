@@ -4,6 +4,7 @@
   with_items:
     - openssl-devel
     - gcc
+    - gcc-c++
     - bzip2
     - libyaml-devel
     - libffi-devel
@@ -11,6 +12,11 @@
     - zlib-devel
     - gdbm-devel
     - ncurses-devel
+    - libxml2
+    - libxslt
+    - libxml2-devel
+    - libxslt-devel
+    - sqlite-devel
   tags: 'ruby'
 
 - name: check exists ruby
@@ -51,16 +57,12 @@
   when: not is_bundler_directory.stat.exists
   tags: ruby
 
-# - name: "config pg gem build settings"
-#   become: yes
-#   become_user: "{{ rbenv.user }}"
-#   template: src=config.j2 dest={{ bundler.directory }}/config mode=0664
-#   tags: ruby
-
 - name: Install mysql-devel
-  yum: name={{ item }} state=latest
-  with_items:
-    - mysql-devel
+  yum:
+    name: mysql-devel
+    state: present
+    disablerepo: mysql57-community
+    enablerepo: mysql56-community
 
 - name: Install dependencies for nokogiri
   yum: name={{ item }} state=latest

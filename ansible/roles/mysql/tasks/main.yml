@@ -6,6 +6,8 @@
   tags: [ 'mysql' ]
   with_items:
     - mariadb-libs
+    - mysql
+    - mysql-devel
 
 - name: detete MariaDB directory
   file:
@@ -14,7 +16,7 @@
 
 - name: add mysql repository
   yum:
-    name: http://dev.mysql.com/get/mysql57-community-release-el6-7.noarch.rpm
+    name: http://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
     state: present
 
 - name: mysql server install
@@ -34,6 +36,8 @@
   yum:
     name: MySQL-python
     state: present
+    disablerepo: mysql57-community
+    enablerepo: mysql56-community
 
 - name: initial settings(mysqladmin ping)
   shell: "mysqladmin --defaults-file={{ mysqld_5_6.defaults_file}} ping | grep alive"
