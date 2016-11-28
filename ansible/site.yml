@@ -17,7 +17,7 @@
 - hosts: db
   become: yes
   roles:
-    - postgresql
+    - mysql
 
 - hosts: dev
   become: yes

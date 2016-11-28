@@ -24,8 +24,8 @@ Vagrant.configure(2) do |config|
     # vb.gui = true
     vb.cpus = 2
     vb.memory = 2048
-    vb.customize ["storageattach", :id, "--storagectl", "IDE Controller", "--port", 0, "--device", 1, "--type", "dvddrive", "--medium", "emptydrive"]
+    vb.customize ["storageattach", :id, "--storagectl", "IDE", "--port", 0, "--device", 1, "--type", "dvddrive", "--medium", "emptydrive"]
   end
-  
+
   config.vm.provision "shell", path: "provision.sh"
 end

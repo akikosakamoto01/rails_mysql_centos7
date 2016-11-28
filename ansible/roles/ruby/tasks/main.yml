@@ -51,8 +51,24 @@
   when: not is_bundler_directory.stat.exists
   tags: ruby
 
-- name: "config pg gem build settings"
-  become: yes
-  become_user: "{{ rbenv.user }}"
-  template: src=config.j2 dest={{ bundler.directory }}/config mode=0664
-  tags: ruby
+# - name: "config pg gem build settings"
+#   become: yes
+#   become_user: "{{ rbenv.user }}"
+#   template: src=config.j2 dest={{ bundler.directory }}/config mode=0664
+#   tags: ruby
+
+- name: Install mysql-devel
+  yum: name={{ item }} state=latest
+  with_items:
+    - mysql-devel
+
+- name: Install dependencies for nokogiri
+  yum: name={{ item }} state=latest
+  with_items:
+    - patch
+
+- name: Install bundler
+  sudo_user: "{{ rbenv.user }}"
+  gem: name={{ item }} executable=.rbenv/shims/gem user_install=False
+  with_items:
+    - bundler

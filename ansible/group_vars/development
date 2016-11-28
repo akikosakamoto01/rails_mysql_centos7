@@ -37,3 +37,7 @@ env: development
 ## nginx
 # nginx:
 #   root: "/srv/nginx/html"
+
+mysqld_5_6:
+  root_password: "mysqlPassword"
+  defaults_file: /root/.my.cnf

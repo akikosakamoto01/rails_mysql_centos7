@@ -1,0 +1,62 @@
+---
+# install mysqld_5.6
+
+- name: remove MariaDB
+  yum: name={{ item }} state=removed
+  tags: [ 'mysql' ]
+  with_items:
+    - mariadb-libs
+
+- name: detete MariaDB directory
+  file:
+    path="/var/lib/mysql/"
+    state=directory
+
+- name: add mysql repository
+  yum:
+    name: http://dev.mysql.com/get/mysql57-community-release-el6-7.noarch.rpm
+    state: present
+
+- name: mysql server install
+  yum:
+    name: mysql-community-server
+    state: present
+    disablerepo: mysql57-community
+    enablerepo: mysql56-community
+
+- name: mysqld chkconfig on
+  service:
+    name=mysqld
+    state=started
+    enabled=yes
+
+- name: install mysql package for Ansible
+  yum:
+    name: MySQL-python
+    state: present
+
+- name: initial settings(mysqladmin ping)
+  shell: "mysqladmin --defaults-file={{ mysqld_5_6.defaults_file}} ping | grep alive"
+  ignore_errors: true
+  register: init_flag
+
+- name: change root password
+  mysql_user:
+    name: "root"
+    host: "{{ item }}"
+    password: "{{ mysqld_5_6.root_password }}"
+  with_items:
+    - 127.0.0.1
+    - ::1
+    - localhost.localdomain
+    - localhost
+  when: init_flag.rc == 1
+
+- name: create root setting file
+  template:
+    src: my.cnf.j2
+    dest: "{{ mysqld_5_6.defaults_file }}"
+    owner: root
+    group: root
+    mode: 0600
+  when: init_flag.rc == 1

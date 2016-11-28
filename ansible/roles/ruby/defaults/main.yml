@@ -1,5 +1,5 @@
 ---
 ruby:
-  version: "2.3.0"
+  version: "2.1.5"
 bundler:
   directory: "~/.bundle"
