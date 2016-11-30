@@ -19,6 +19,7 @@ Vagrant.configure(2) do |config|
   # config.vm.network "public_network"
 
   config.vm.synced_folder ".", "/home/vagrant/sync", type: "virtualbox"
+  config.vm.synced_folder "./workspace", "/home/vagrant/workspace", type: "virtualbox"
 
   config.vm.provider "virtualbox" do |vb|
     # vb.gui = true
